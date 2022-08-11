@@ -1,0 +1,66 @@
+{% extends 'blog/base.html' %}
+{% load static %}
+{% block content %}
+<section class="bg-text-area">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="bg-text">
+                    <h3>Classic BLOG Design</h3>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="blog-post-area">
+    <div class="container">
+        <a href="{% url 'create' %}" class="btn btn-primary p-3">Create Post</a>
+        <div class="row">
+            <div class="blog-post-area-style">
+                    {% for post in posts %}
+                    <div class="col-12">
+                        <div class="single-post row">
+                            <div class="col-3">
+                                <img src="{{post.image.url}}" alt="" width="300px" height="201px">
+                            </div>
+                            <div class="col-9">
+                                <h3><a href="{% url 'single' post.id %}">{{post.title}}</a></h3>
+                                <h4><span>Posted By: <span class="author-name">{{post.author}}</span></span>
+                                </h4>
+                                <!-- <p>{{post.content}}</p> -->
+                                <p>{{post.content|safe|truncatewords:"20"|linebreaks}}</p>
+                                {% if post.author == user %}
+                                <p>
+                                    <a href="{% url 'update' post.id %}" class="btn btn-outline-primary">Edit</a>
+                                    <a href="{% url 'delete' post.id %}" class="btn btn-danger">Delete</a>
+                                </p>
+                                {% endif %}
+                                <h4><span>{{post.date}}</span></h4>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+            </div>
+        </div>
+    </div>
+    <div class="pegination">
+        <div class="nav-links">
+            {% if posts.has_previous %}
+            <a class="page-numbers" href="?page={{posts.previous_page_number}}"><i class="fa fa-angle-left" aria-hidden="true"></i></a>
+            {% endif %}
+            {% for page in paginator.page_range %}
+            {% if page == posts.number %}
+            <a class="page-numbers current" href="?page={{page}}">{{page}}</a>
+            {% else %}
+            <a class="page-numbers" href="?page={{page}}">{{page}}</a>
+            {% endif %}
+            {% endfor %}
+            {% if posts.has_next %}
+            <a class="page-numbers" href="?page={{posts.next_page_number}}"><i class="fa fa-angle-right" aria-hidden="true"></i></a>
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+{% endblock content %}
